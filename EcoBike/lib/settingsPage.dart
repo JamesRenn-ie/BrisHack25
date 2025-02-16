@@ -28,18 +28,29 @@ class StarrySkyPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Paint starPaint = Paint()..color = Colors.white;
 
-    for (int i = 0; i < 150; i++) { // Generate 150 stars
-      double x = _random.nextDouble() * size.width;
-      double y = _random.nextDouble() * size.height;
-      double radius = _random.nextDouble() * 2 + 1; // Vary star sizes
+    // Define a safe zone for text and Earth (centered area)
+    double safeZoneWidth = 200;  // Adjust based on text width
+    double safeZoneHeight = 250; // Adjust based on text + Earth size
+    double safeZoneX = (size.width - safeZoneWidth) / 2;
+    double safeZoneY = (size.height - safeZoneHeight) / 2;
 
+    for (int i = 0; i < 150; i++) { // Generate 150 stars
+      double x, y;
+      do {
+        x = _random.nextDouble() * size.width;
+        y = _random.nextDouble() * size.height;
+      } while (x > safeZoneX && x < safeZoneX + safeZoneWidth &&
+          y > safeZoneY && y < safeZoneY + safeZoneHeight);
+
+      double radius = _random.nextDouble() * 2 + 1; // Vary star sizes
       canvas.drawCircle(Offset(x, y), radius, starPaint);
     }
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
+
 
 class _SettingsPageState extends State<SettingsPage> {
   double progress = 0.3; // Initial progress
@@ -126,7 +137,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Ensure text is visible
               ),
               Text(
-                'Minutes of free bike: ${_clickCount * 5} times',
+                'Minutes of free bike: ${_clickCount * 5} minutes',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
               ),
             ],

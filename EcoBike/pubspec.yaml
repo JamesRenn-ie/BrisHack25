@@ -58,6 +58,7 @@ flutter:
   assets:
     - ..\EcoBike\assets\earth.png
     - ..\EcoBike\assets\map.png
+    - ..\EcoBike\assets\road.png
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
