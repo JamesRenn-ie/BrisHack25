@@ -27,6 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double progress = 0.3; // Initial progress
   ui.Image? earthImage; // Store the loaded image
+  ui.Image? mapImage;
 
   @override
   void initState() {
@@ -58,28 +59,56 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Column(
-      children: [
-        ListTile(
-          title: Text('Stats',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-              )),
-          trailing: Icon(Icons.query_stats),
-          subtitle: Column(
-            children: [
-              Text(
-                "Litter Detected: 12",
+        children: [
+          ListTile(
+            title: Text('Stats',
                 style: TextStyle(
-                  fontSize: 25,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  decoration: TextDecoration.underline,
+                )),
+            trailing: Icon(Icons.query_stats),
+            subtitle: Column(
+              children: [
+                Text(
+                  "Litter Picked Up: 5",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-              )
+                Text(
+                  "Money Saved: £12",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+
+              ],
+            ),
+          ),
+          Divider(
+            height: 50,
+            thickness: 10,
+          ),
+          Column(
+            children: [
+              Text("Nearest Bike",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 23
+              ),),
+              Image.asset("assets/map.png"),
+
             ],
           ),
-        ),
+          Divider(
+            height: 100,
+            thickness: 10,
+          ),
 
-        Center(
+          Center(
             child: GestureDetector(
               onTap: increaseProgress,
               child: earthImage == null
@@ -90,7 +119,7 @@ class _HomePageState extends State<HomePage> {
                     ),
             ),
           ),
-      ],
+        ],
     ));
   }
 }
