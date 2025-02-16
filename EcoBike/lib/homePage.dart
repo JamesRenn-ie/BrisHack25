@@ -57,8 +57,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Column(
+    return SingleChildScrollView(
+        child: Column(
         children: [
           ListTile(
             title: Text('Stats',
