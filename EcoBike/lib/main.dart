@@ -52,14 +52,15 @@ class _MyHomePageState extends State<MyHomePage> {
     ];
     return Scaffold(
         appBar: AppBar(
+          backgroundColor: Theme.of(context).primaryColor,
 
-        title: Text(
-          "Suzuki Practice Buddy",
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-           ),
-          ),
+          title: Text(
+            "Eco Bike",
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+             ),
+            ),
         ),
         body: _pages[_selectedIndex],
 
