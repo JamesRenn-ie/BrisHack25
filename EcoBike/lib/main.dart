@@ -1,4 +1,8 @@
+import 'package:eco_bike/profilePage.dart';
+import 'package:eco_bike/settingsPage.dart';
 import 'package:flutter/material.dart';
+
+import 'homePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +20,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Home Page'),
+      home: const MyHomePage(title: 'Eco Bike'),
     );
   }
 }
@@ -33,24 +37,59 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+  int _selectedIndex = 1; // Track which page is selected - initially, home page
+
+  List<Widget> _pages = [];
+
 
   @override
   Widget build(BuildContext context) {
+    _pages = [
+      ProfilePage(),
+      HomePage(),
+      SettingsPage(),
+
+    ];
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Find nearest bike',
-            ),
-          ],
+        appBar: AppBar(
+
+        title: Text(
+          "Suzuki Practice Buddy",
+          style: TextStyle(
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+           ),
+          ),
         ),
-      ),// This trailing comma makes auto-formatting nicer for build methods.
+        body: _pages[_selectedIndex],
+
+    bottomNavigationBar: BottomNavigationBar(
+
+      type: BottomNavigationBarType.fixed,
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
+      items: const <BottomNavigationBarItem>[
+      BottomNavigationBarItem(
+        icon: Icon(Icons.account_circle),
+        label: 'Profile',
+      ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.settings),
+          label: 'Settings',
+        ),
+    ]
+    ),
     );
+  }
+
+  // Allows user to switch between items on dock
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
   }
 }
