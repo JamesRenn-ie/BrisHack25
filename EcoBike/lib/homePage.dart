@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
@@ -27,7 +26,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   double progress = 0.3; // Initial progress
   ui.Image? earthImage; // Store the loaded image
-  ui.Image? mapImage;
+  bool _isLocked = false; // Lock state
 
   @override
   void initState() {
@@ -55,63 +54,98 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _toggleLock() {
+    setState(() {
+      _isLocked = !_isLocked; // Toggle lock state
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-        child: Column(
-          children: [
-            Divider(
-              height: 13,
-              thickness: 0,
+      child: Column(
+        children: [
+          Divider(
+            height: 13,
+            thickness: 0,
+          ),
+          ListTile(
+            title: Text(
+              'Stats',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                decoration: TextDecoration.underline,
+              ),
             ),
-            ListTile(
-              title: Text('Stats',
+            trailing: Icon(Icons.query_stats),
+            subtitle: Column(
+              children: [
+                Text(
+                  "Litter Picked Up: 5",
                   style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    decoration: TextDecoration.underline,
-                  )),
-              trailing: Icon(Icons.query_stats),
-              subtitle: Column(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "Money Saved: £12",
+                  style: TextStyle(
+                    fontSize: 25,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Divider(
+            height: 50,
+            thickness: 10,
+          ),
+          Column(
+            children: [
+              Text(
+                "Nearest Bike",
+                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23),
+              ),
+              Image.asset("assets/map.png"),
+            ],
+          ),
+          Divider(
+            height: 100,
+            thickness: 10,
+          ),
+          // Lock/Unlock Button
+          GestureDetector(
+            onTap: _toggleLock, // Toggle the lock state when tapped
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+              decoration: BoxDecoration(
+                color: _isLocked ? Colors.grey : Colors.green, // Change color based on lock state
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
+                  Icon(
+                    _isLocked ? Icons.lock : Icons.lock_open, // Lock or unlock icon
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                  SizedBox(width: 10),
                   Text(
-                    "Litter Picked Up: 5",
+                    _isLocked ? 'Locked' : 'Unlocked', // Text based on lock state
                     style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                      color: Colors.white,
                     ),
                   ),
-                  Text(
-                    "Money Saved: £12",
-                    style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-
                 ],
               ),
             ),
-            Divider(
-              height: 50,
-              thickness: 10,
-            ),
-            Column(
-              children: [
-                Text(
-                  "Nearest Bike",
-                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23),
-                ),
-                Image.asset("assets/map.png"),
-              ],
-            ),
-            Divider(
-              height: 100,
-              thickness: 10,
-            ),
-      ],
-    ));
+          ),
+        ],
+      ),
+    );
   }
 }
-
-

@@ -57,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(
             "Eco Bike",
             style: TextStyle(
+              color :Colors.white,
               fontSize: 30,
               fontWeight: FontWeight.bold,
              ),
