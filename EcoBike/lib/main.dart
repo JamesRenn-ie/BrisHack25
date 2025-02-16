@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) => BackendBloc(),
-        child: MyHomePage(),
+        child: MyHomePage(title: 'EcoBike',),
       ),
     );
   }
@@ -67,26 +67,28 @@ class _MyHomePageState extends State<MyHomePage> {
               fontSize: 30,
               fontWeight: FontWeight.bold,
              ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BlocBuilder<BackendBloc, String>(
-              builder: (context, state) {
-                if (state.isEmpty) {
-                  return Text("Press the button to fetch data");
-                }
-                return Text(state);
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                context.read<BackendBloc>().fetchData();
-              },
-              child: Text("Fetch Data"),
-            ),
-        ),
+          ),
+      ),
+      // body: Center(
+      //   child: Column(
+      //     mainAxisAlignment: MainAxisAlignment.center,
+      //     children: [
+      //       BlocBuilder<BackendBloc, String>(
+      //         builder: (context, state) {
+      //           if (state.isEmpty) {
+      //             return Text("Press the button to fetch data");
+      //           }
+      //           return Text(state);
+      //         },
+      //       ),
+      //       const SizedBox(height: 20),
+      //       ElevatedButton(
+      //         onPressed: () {
+      //           context.read<BackendBloc>().fetchData();
+      //         },
+      //         child: Text("Fetch Data"),
+      //       ),
+      //   ),
         body: _pages[_selectedIndex],
 
     bottomNavigationBar: BottomNavigationBar(

@@ -1,7 +1,9 @@
+import 'package:eco_bike/backend_bloc.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:eco_bike/settingsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -152,6 +154,21 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
+            BlocBuilder<BackendBloc, String>(
+              builder: (context, state) {
+                if (state.isEmpty) {
+                  return Text("Press the button to fetch data");
+                }
+                return Text(state);
+              },
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {
+                context.read<BackendBloc>().fetchData();
+              },
+              child: Text("Fetch Data"),
+            ),
         ],
       ),
     );
