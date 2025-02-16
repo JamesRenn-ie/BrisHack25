@@ -59,125 +59,59 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return SingleChildScrollView(
         child: Column(
-        children: [
-          ListTile(
-            title: Text('Stats',
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  decoration: TextDecoration.underline,
-                )),
-            trailing: Icon(Icons.query_stats),
-            subtitle: Column(
+          children: [
+            Divider(
+              height: 13,
+              thickness: 0,
+            ),
+            ListTile(
+              title: Text('Stats',
+                  style: TextStyle(
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
+                  )),
+              trailing: Icon(Icons.query_stats),
+              subtitle: Column(
+                children: [
+                  Text(
+                    "Litter Picked Up: 5",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  Text(
+                    "Money Saved: £12",
+                    style: TextStyle(
+                      fontSize: 25,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+            Divider(
+              height: 50,
+              thickness: 10,
+            ),
+            Column(
               children: [
                 Text(
-                  "Litter Picked Up: 5",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  "Nearest Bike",
+                  style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23),
                 ),
-                Text(
-                  "Money Saved: £12",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-
+                Image.asset("assets/map.png"),
               ],
             ),
-          ),
-          Divider(
-            height: 50,
-            thickness: 10,
-          ),
-          Column(
-            children: [
-              Text("Nearest Bike",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontSize: 23
-              ),),
-              Image.asset("assets/map.png"),
-
-            ],
-          ),
-          Divider(
-            height: 100,
-            thickness: 10,
-          ),
-
-          Center(
-            child: GestureDetector(
-              onTap: increaseProgress,
-              child: earthImage == null
-                  ? CircularProgressIndicator() // Show loading indicator
-                  : CustomPaint(
-                      size: Size(150, 150),
-                      painter: EarthMeterPainter(progress, earthImage!),
-                    ),
+            Divider(
+              height: 100,
+              thickness: 10,
             ),
-          ),
-        ],
+      ],
     ));
   }
 }
 
-class EarthMeterPainter extends CustomPainter {
-  final double progress;
-  final ui.Image earthImage;
 
-  EarthMeterPainter(this.progress, this.earthImage);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Offset center = size.center(Offset.zero);
-    final double radius = size.width / 2;
-
-    // Scale the Earth Image to Fit Inside the Button
-    final Rect earthRect = Rect.fromCircle(center: center, radius: radius);
-    final Paint earthPaint = Paint()
-      ..shader = ImageShader(
-          earthImage,
-          TileMode.clamp,
-          TileMode.clamp,
-          Matrix4.identity()
-              .scaled(
-                size.width / earthImage.width, // Scale width
-                size.height / earthImage.height, // Scale height
-              )
-              .storage);
-
-    // Circular Border Paint
-    final Paint borderPaint = Paint()
-      ..color = Colors.blueAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5;
-
-    // Progress Arc Paint
-    final Paint progressPaint = Paint()
-      ..color = Colors.lightGreenAccent
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 8
-      ..strokeCap = StrokeCap.round;
-
-    // Draw Earth Texture (Centered & Scaled)
-    canvas.drawCircle(center, radius, earthPaint);
-
-    // Draw Circular Border
-    canvas.drawCircle(center, radius, borderPaint);
-
-    // Draw Progress Arc (Around the Circle)
-    canvas.drawArc(
-      Rect.fromCircle(center: center, radius: radius),
-      -pi / 2,
-      progress * 2 * pi,
-      false,
-      progressPaint,
-    );
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
