@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:eco_bike/settingsPage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,17 +23,35 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
+
 }
 
 class _HomePageState extends State<HomePage> {
   double progress = 0.3; // Initial progress
   ui.Image? earthImage; // Store the loaded image
-  bool _isLocked = false; // Lock state
+  bool _isLocked = true; // Lock state
+  int _clickCount = 0;
+
+
+  void _loadLitterPickup() async {
+    final prefs = await SharedPreferences.getInstance();
+    _clickCount = prefs.getInt('litterPickup') ?? 0;
+  }
+  void _loadLocked() async {
+    final prefs = await SharedPreferences.getInstance();
+    _isLocked = prefs.getBool('litterPickup') ?? true;
+  }
+  void _saveLocked() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setBool('litterPickup', _isLocked);
+  }
 
   @override
   void initState() {
     super.initState();
     _loadEarthImage(); // Load image once
+    _loadLitterPickup();
+    _loadLocked();
   }
 
   Future<void> _loadEarthImage() async {
@@ -57,7 +76,8 @@ class _HomePageState extends State<HomePage> {
 
   void _toggleLock() {
     setState(() {
-      _isLocked = !_isLocked; // Toggle lock state
+      _isLocked = !_isLocked;// Toggle lock state
+      _saveLocked();
     });
   }
 
@@ -83,14 +103,14 @@ class _HomePageState extends State<HomePage> {
             subtitle: Column(
               children: [
                 Text(
-                  "Litter Picked Up: ",
+                  "Litter Picked Up: ${_clickCount}",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 Text(
-                  "Money Saved: £12",
+                  "Money Saved: £${(_clickCount *0.20).toStringAsFixed(2)}",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
@@ -98,19 +118,6 @@ class _HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-          ),
-          Divider(
-            height: 50,
-            thickness: 10,
-          ),
-          Column(
-            children: [
-              Text(
-                "Nearest Bike",
-                style: TextStyle(fontWeight: FontWeight.w500, fontSize: 23),
-              ),
-              Image.asset("assets/map.png"),
-            ],
           ),
           Divider(
             height: 100,
