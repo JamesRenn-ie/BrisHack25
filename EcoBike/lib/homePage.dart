@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:eco_bike/backend_bloc.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
@@ -83,6 +85,9 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  int prevState=0;
+  int litterDetected = 0;
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -159,7 +164,24 @@ class _HomePageState extends State<HomePage> {
                 if (state.isEmpty) {
                   return Text("Press the button to fetch data");
                 }
-                return Text(state);
+                else{
+                  int currentState = jsonDecode(state)['predictions'];
+                  int stateDiff = currentState - prevState;
+                  print("TEst");
+                  // if(stateDiff != null && currentState != null) {
+                    if (stateDiff >= 0) {
+                      litterDetected += (stateDiff);
+
+                      print("Prev litter: ${prevState}");
+
+                    }
+                  prevState = currentState;
+
+                  // }
+
+                  return Text("Current litter: ${jsonDecode(state)['predictions'].toString()}\nTotal litter: ${litterDetected}");
+                    // return Text(state);
+                }
               },
             ),
             const SizedBox(height: 20),
