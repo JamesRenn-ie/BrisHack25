@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:eco_bike/settingsPage.dart';
 
 void main() {
   runApp(MyApp());
@@ -82,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             subtitle: Column(
               children: [
                 Text(
-                  "Litter Picked Up: 5",
+                  "Litter Picked Up: ",
                   style: TextStyle(
                     fontSize: 25,
                     fontWeight: FontWeight.w500,
