@@ -111,7 +111,7 @@ class _ProfilePageState extends State<ProfilePage> {
       appBar: AppBar(
         backgroundColor: Colors.green,
         title: Text(
-          'Map',
+          'Find the nearest bike',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
