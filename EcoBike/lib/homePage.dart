@@ -57,19 +57,41 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: GestureDetector(
-          onTap: increaseProgress,
-          child: earthImage == null
-              ? CircularProgressIndicator() // Show loading indicator
-              : CustomPaint(
-            size: Size(150, 150),
-            painter: EarthMeterPainter(progress, earthImage!),
+        body: Column(
+      children: [
+        ListTile(
+          title: Text('Stats',
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              )),
+          trailing: Icon(Icons.query_stats),
+          subtitle: Column(
+            children: [
+              Text(
+                "Litter Detected: 12",
+                style: TextStyle(
+                  fontSize: 25,
+                  fontWeight: FontWeight.w500,
+                ),
+              )
+            ],
           ),
         ),
-      ),
-    );
+
+        Center(
+            child: GestureDetector(
+              onTap: increaseProgress,
+              child: earthImage == null
+                  ? CircularProgressIndicator() // Show loading indicator
+                  : CustomPaint(
+                      size: Size(150, 150),
+                      painter: EarthMeterPainter(progress, earthImage!),
+                    ),
+            ),
+          ),
+      ],
+    ));
   }
 }
 
@@ -91,11 +113,12 @@ class EarthMeterPainter extends CustomPainter {
           earthImage,
           TileMode.clamp,
           TileMode.clamp,
-          Matrix4.identity().scaled(
-            size.width / earthImage.width, // Scale width
-            size.height / earthImage.height, // Scale height
-          ).storage
-      );
+          Matrix4.identity()
+              .scaled(
+                size.width / earthImage.width, // Scale width
+                size.height / earthImage.height, // Scale height
+              )
+              .storage);
 
     // Circular Border Paint
     final Paint borderPaint = Paint()
