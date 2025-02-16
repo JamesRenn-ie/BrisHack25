@@ -80,8 +80,8 @@ class _MyHomePageState extends State<MyHomePage> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
-          label: 'Settings',
+          icon: Icon(Icons.restore_from_trash),
+          label: 'Litter Tracker',
         ),
     ]
     ),

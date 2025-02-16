@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -18,8 +19,30 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void initState() {
     super.initState();
+    _loadLitterPickup();
+    _loadProgress();
     _loadEarthImage(); // Load the earth image once when the page is initialized
   }
+
+  void _saveLitterPickup() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setInt('litterPickup', _clickCount);
+  }
+
+  void _loadLitterPickup() async {
+    final prefs = await SharedPreferences.getInstance();
+    _clickCount = prefs.getInt('litterPickup')??0;
+  }
+  void _saveProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setDouble('progress', progress);
+  }
+
+  void _loadProgress() async {
+    final prefs = await SharedPreferences.getInstance();
+    progress = prefs.getDouble('progress')??0;
+  }
+
 
   Future<void> _loadEarthImage() async {
     final ByteData data = await rootBundle.load('assets/earth.png');
@@ -37,8 +60,10 @@ class _SettingsPageState extends State<SettingsPage> {
   void increaseProgress() {
     setState(() {
       progress += 0.1;
+      _saveProgress();
       if (progress > 1.0) progress = 0.0; // Reset after full progress
       _clickCount++; // Increment the click count when the button is pressed
+      _saveLitterPickup();
     });
   }
 

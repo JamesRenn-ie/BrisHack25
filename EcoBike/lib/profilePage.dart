@@ -25,6 +25,7 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     mapController = MapController();
+    getCurrentLocation();
   }
 
   void getCurrentLocation() async {
@@ -80,13 +81,15 @@ class _ProfilePageState extends State<ProfilePage> {
         15.0,
       );
     });
+
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Map Demo'),
+        title: Text('Find The Nearest Bike'),
       ),
       body: Column(
         children: [
