@@ -1,5 +1,4 @@
 import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -25,25 +24,15 @@ class _ProfilePageState extends State<ProfilePage> {
   void initState() {
     super.initState();
     mapController = MapController();
-    getCurrentLocation();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      getCurrentLocation();
+    });
   }
 
   void getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Location Service Disabled'),
-          content: Text('Please enable location services.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: Text('OK'),
-            ),
-          ],
-        ),
-      );
+      _showAlert('Location Service Disabled', 'Please enable location services.');
       return;
     }
 
@@ -52,19 +41,7 @@ class _ProfilePageState extends State<ProfilePage> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: Text('Location Permission Denied'),
-            content: Text('Please grant location permission.'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: Text('OK'),
-              ),
-            ],
-          ),
-        );
+        _showAlert('Location Permission Denied', 'Please grant location permission.');
         return;
       }
     }
@@ -84,6 +61,23 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  void _showAlert(String title, String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text('OK', style: TextStyle(color: Colors.green)),
+          ),
+        ],
+      ),
+    );
+  }
+
   List<List<double>> bikes = [
     [51.456206, -2.603073],
     [51.456288, -2.602934],
@@ -91,106 +85,95 @@ class _ProfilePageState extends State<ProfilePage> {
   ];
 
   List<Marker> buildBikes() {
-    List<Marker> bikeMarkers = [];
-    for (var bike in bikes) {
-      bikeMarkers.add(
-      Marker(
+    return bikes.map((bike) {
+      return Marker(
         point: LatLng(bike[0], bike[1]),
+        width: 50,
+        height: 50,
         child: GestureDetector(
-            child: Icon(Icons.pedal_bike),
-            onTap: () {
-              showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                        title: Text("do you want to use this bike"),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("Yes")),
-                          TextButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              child: Text("No")),
-                        ],
-                      ));
-            }),
-      )
+          child: AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            child: Icon(Icons.pedal_bike, size: 45, color: Colors.blue),
+          ),
+          onTap: () {
+            _showAlert("Use This Bike?", "Do you want to use this bike?");
+          },
+        ),
       );
-    }
-    return bikeMarkers;
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200], // Light background
       appBar: AppBar(
-        title: Text('Find The Nearest Bike'),
+        backgroundColor: Colors.green,
+        title: Text(
+          'Map',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 5, // Shadow effect
       ),
       body: Column(
         children: [
-          Expanded(
-            child: FlutterMap(
-              mapController: mapController,
-              children: [
-                TileLayer(
-                  urlTemplate:
-                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-                  subdomains: ['a', 'b', 'c'],
-                ),
-                MarkerLayer(
-                  markers: [
-                    if (currentLocation != null)
-                      Marker(
-                        point: LatLng(
-                          currentLocation!.latitude,
-                          currentLocation!.longitude,
-                        ),
-                        child: Icon(Icons.location_on),
-                      ),
-                    Marker(
-                      point: LatLng(51.456206, -2.603073),
-                      child: GestureDetector(
-                          child: Icon(Icons.pedal_bike),
-                          onTap: () {
-                            showDialog(
-                                context: context,
-                                builder: (context) => AlertDialog(
-                                      title:
-                                          Text("do you want to use this bike"),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("Yes")),
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("No")),
-                                      ],
-                                    ));
-                          }),
+          Padding(
+            padding: EdgeInsets.all(10.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(15), // Rounded map corners
+              child: Container(
+                decoration: BoxDecoration(boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                  )
+                ]),
+                height: MediaQuery.of(context).size.height * 0.7, // 70% screen height
+                width: double.infinity,
+                child: FlutterMap(
+                  mapController: mapController,
+                  options: MapOptions(
+
+                  ),
+                  children: [
+                    TileLayer(
+                      urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                      subdomains: ['a', 'b', 'c'],
+                    ),
+                    MarkerLayer(
+                      markers: [
+                        if (currentLocation != null)
+                          Marker(
+                            point: LatLng(
+                              currentLocation!.latitude,
+                              currentLocation!.longitude,
+                            ),
+                            width: 50,
+                            height: 50,
+                            child: AnimatedContainer(
+                              duration: Duration(milliseconds: 600),
+                              curve: Curves.easeInOut,
+                              child: Icon(Icons.location_on, size: 50, color: Colors.red),
+                            ),
+                          ),
+                        ...buildBikes(),
+                      ],
                     ),
                   ],
                 ),
-                MarkerLayer(markers: buildBikes())
-              ],
-            ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(16.0),
-            child: ElevatedButton(
-              onPressed: () {
-                getCurrentLocation();
-              },
-              child: Text('Get Location'),
+              ),
             ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.green,
+        elevation: 5,
+        label: Text("Get Location"),
+        icon: Icon(Icons.my_location),
+        onPressed: getCurrentLocation,
       ),
     );
   }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
-import 'package:eco_bike/settingsPage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -157,3 +156,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
