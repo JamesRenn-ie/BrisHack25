@@ -1,8 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-
 
 class LocationModel {
   final double latitude;
@@ -14,7 +15,6 @@ class LocationModel {
 class ProfilePage extends StatefulWidget {
   @override
   _ProfilePageState createState() => _ProfilePageState();
-
 }
 
 class _ProfilePageState extends State<ProfilePage> {
@@ -50,7 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
     LocationPermission permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
-      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -81,8 +82,45 @@ class _ProfilePageState extends State<ProfilePage> {
         15.0,
       );
     });
+  }
 
+  List<List<double>> bikes = [
+    [51.456206, -2.603073],
+    [51.456288, -2.602934],
+    [51.456278, -2.602674],
+  ];
 
+  List<Marker> buildBikes() {
+    List<Marker> bikeMarkers = [];
+    for (var bike in bikes) {
+      bikeMarkers.add(
+      Marker(
+        point: LatLng(bike[0], bike[1]),
+        child: GestureDetector(
+            child: Icon(Icons.pedal_bike),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                        title: Text("do you want to use this bike"),
+                        actions: [
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("Yes")),
+                          TextButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              child: Text("No")),
+                        ],
+                      ));
+            }),
+      )
+      );
+    }
+    return bikeMarkers;
   }
 
   @override
@@ -98,7 +136,8 @@ class _ProfilePageState extends State<ProfilePage> {
               mapController: mapController,
               children: [
                 TileLayer(
-                  urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                  urlTemplate:
+                      'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
                   subdomains: ['a', 'b', 'c'],
                 ),
                 MarkerLayer(
@@ -111,8 +150,34 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         child: Icon(Icons.location_on),
                       ),
+                    Marker(
+                      point: LatLng(51.456206, -2.603073),
+                      child: GestureDetector(
+                          child: Icon(Icons.pedal_bike),
+                          onTap: () {
+                            showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                      title:
+                                          Text("do you want to use this bike"),
+                                      actions: [
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("Yes")),
+                                        TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: Text("No")),
+                                      ],
+                                    ));
+                          }),
+                    ),
                   ],
                 ),
+                MarkerLayer(markers: buildBikes())
               ],
             ),
           ),
