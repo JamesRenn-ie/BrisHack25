@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
       title: 'Eco-Bike',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
       ),
       home: const MyHomePage(title: 'Eco Bike'),
     );
