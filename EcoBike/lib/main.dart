@@ -72,8 +72,8 @@ class _MyHomePageState extends State<MyHomePage> {
       onTap: _onItemTapped,
       items: const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: Icon(Icons.account_circle),
-        label: 'Profile',
+        icon: Icon(Icons.map),
+        label: 'Find A Bike',
       ),
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
