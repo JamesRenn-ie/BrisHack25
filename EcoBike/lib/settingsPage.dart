@@ -15,6 +15,47 @@ class SettingsPage extends StatefulWidget {
   _SettingsPageState createState() => _SettingsPageState();
 }
 
+class StarryBackground extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return CustomPaint(
+      size: Size(MediaQuery.of(context).size.width, MediaQuery.of(context).size.height),
+      painter: StarrySkyPainter(),
+    );
+  }
+}
+
+class StarrySkyPainter extends CustomPainter {
+  final Random _random = Random();
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint starPaint = Paint()..color = Colors.white;
+
+    // Define a safe zone for text and Earth (centered area)
+    double safeZoneWidth = 200;  // Adjust based on text width
+    double safeZoneHeight = 250; // Adjust based on text + Earth size
+    double safeZoneX = (size.width - safeZoneWidth) / 2;
+    double safeZoneY = (size.height - safeZoneHeight) / 2;
+
+    for (int i = 0; i < 150; i++) { // Generate 150 stars
+      double x, y;
+      do {
+        x = _random.nextDouble() * size.width;
+        y = _random.nextDouble() * size.height;
+      } while (x > safeZoneX && x < safeZoneX + safeZoneWidth &&
+          y > safeZoneY && y < safeZoneY + safeZoneHeight);
+
+      double radius = _random.nextDouble() * 2 + 1; // Vary star sizes
+      canvas.drawCircle(Offset(x, y), radius, starPaint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+
 class _SettingsPageState extends State<SettingsPage> {
   double progress = 0.3; // Initial progress
   ui.Image? earthImage; // Store the loaded image
@@ -78,28 +119,37 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          GestureDetector(
-            onTap: increaseProgress,
-            child: earthImage == null
-                ? CircularProgressIndicator() // Show loading indicator if the image is not loaded
-                : CustomPaint(
-              size: Size(150, 150),
-              painter: EarthMeterPainter(progress, earthImage!),
-            ),
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: Container( // Ensure background is visible
+            color: Colors.black, // Set a default background color
+            child: StarryBackground(),
           ),
-          SizedBox(height: 20),
-          // Display the click count text
-          Text(
-            'Button tapped: $_clickCount times',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            'Minutes of free bike: ${_clickCount*5} times',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        Center( // UI components
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: increaseProgress,
+                child: earthImage == null
+                    ? CircularProgressIndicator()
+                    : CustomPaint(
+                  size: Size(150, 150),
+                  painter: EarthMeterPainter(progress, earthImage!),
+                ),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'Litter Picked Up: $_clickCount times',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white), // Ensure text is visible
+              ),
+              Text(
+                'Minutes of free bike: ${_clickCount * 5} minutes',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ],
           ),
           BlocBuilder<BackendBloc, String>(
             builder: (context, state) {
@@ -146,6 +196,8 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
     );
+
+
   }
 }
 
