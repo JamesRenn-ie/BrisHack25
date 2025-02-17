@@ -22,7 +22,6 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
-
 }
 
 class _HomePageState extends State<HomePage> {
@@ -30,16 +29,18 @@ class _HomePageState extends State<HomePage> {
   ui.Image? earthImage; // Store the loaded image
   bool _isLocked = true; // Lock state
   int _clickCount = 0;
-
+  double _bikePosition = -100; // Start off-screen
 
   void _loadLitterPickup() async {
     final prefs = await SharedPreferences.getInstance();
     _clickCount = prefs.getInt('litterPickup') ?? 0;
   }
+
   void _loadLocked() async {
     final prefs = await SharedPreferences.getInstance();
     _isLocked = prefs.getBool('litterPickup') ?? true;
   }
+
   void _saveLocked() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool('litterPickup', _isLocked);
@@ -75,84 +76,109 @@ class _HomePageState extends State<HomePage> {
 
   void _toggleLock() {
     setState(() {
-      _isLocked = !_isLocked;// Toggle lock state
+      _isLocked = !_isLocked; // Toggle lock state
       _saveLocked();
+      if (!_isLocked) {
+        _startBikeAnimation(); // Start animation when unlocked
+      }
     });
   }
 
+  void _startBikeAnimation() {
+    if (_bikePosition == -100) { // Only move if at the start
+      setState(() {
+        _bikePosition = MediaQuery.of(context).size.width; // Move across the screen
+      });
+
+      // Reset bike after animation completes
+      Future.delayed(Duration(seconds: 3), () {
+        setState(() {
+          _bikePosition = -100; // Restart position
+        });
+      });
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          Divider(
-            height: 13,
-            thickness: 0,
+    return Stack(
+      children: [
+
+        // Animated Bike Moving
+        AnimatedPositioned(
+          duration: Duration(seconds: 3),
+          left: _bikePosition,
+          bottom: 50, // Keep bike at bottom
+          child: Image.asset(
+            'assets/bike.png', // Add your bike image in assets
+            width: 100,
           ),
-          ListTile(
-            title: Text(
-              'Stats',
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                decoration: TextDecoration.underline,
-              ),
-            ),
-            trailing: Icon(Icons.query_stats),
-            subtitle: Column(
-              children: [
-                Text(
-                  "Litter Picked Up: ${_clickCount}",
+        ),
+
+        // Main Content
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              Divider(height: 13, thickness: 0),
+              ListTile(
+                title: Text(
+                  'Stats',
                   style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                Text(
-                  "Money Saved: £${(_clickCount *0.20).toStringAsFixed(2)}",
-                  style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Divider(
-            height: 100,
-            thickness: 10,
-          ),
-          // Lock/Unlock Button
-          GestureDetector(
-            onTap: _toggleLock, // Toggle the lock state when tapped
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-              decoration: BoxDecoration(
-                color: _isLocked ? Colors.grey : Colors.green, // Change color based on lock state
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    _isLocked ? Icons.lock : Icons.lock_open, // Lock or unlock icon
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
+                    decoration: TextDecoration.underline,
                     color: Colors.white,
-                    size: 30,
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    _isLocked ? 'Locked' : 'Unlocked', // Text based on lock state
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
+                ),
+                trailing: Icon(Icons.query_stats, color: Colors.white),
+                subtitle: Column(
+                  children: [
+                    Text(
+                      "Litter Picked Up: $_clickCount",
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.green),
                     ),
-                  ),
-                ],
+                    Text(
+                      "Money Saved: £${(_clickCount * 0.20).toStringAsFixed(2)}",
+                      style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500, color: Colors.green),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              Divider(height: 100, thickness: 10, color: Colors.white),
+
+              // Start Journey Button
+              GestureDetector(
+                onTap: _toggleLock,
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 300),
+                  padding: EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                  decoration: BoxDecoration(
+                    color: _isLocked ? Colors.grey.withOpacity(0.8) : Colors.green.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _isLocked ? Icons.lock : Icons.lock_open,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        _isLocked ? 'Start Journey' : 'End Journey',
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
