@@ -104,7 +104,7 @@ class _SettingsPageState extends State<SettingsPage> {
           BlocBuilder<BackendBloc, String>(
             builder: (context, state) {
               if (state.isEmpty) {
-                return Text("Press the button to fetch data");
+                return Text("Waiting for the server...");
               }
               else{
                 int currentState = jsonDecode(state)['predictions'];
@@ -135,6 +135,13 @@ class _SettingsPageState extends State<SettingsPage> {
               }
             },
           ),
+          // const SizedBox(height: 20),
+          // ElevatedButton(
+          //   onPressed: () {
+          //     context.read<BackendBloc>().fetchData();
+          //   },
+          //   child: Text("Fetch Data"),
+          // ),
 
         ],
       ),
