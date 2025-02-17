@@ -32,7 +32,8 @@ class _ProfilePageState extends State<ProfilePage> {
   void getCurrentLocation() async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      _showAlert('Location Service Disabled', 'Please enable location services.');
+      _showAlert(
+          'Location Service Disabled', 'Please enable location services.');
       return;
     }
 
@@ -41,7 +42,8 @@ class _ProfilePageState extends State<ProfilePage> {
       permission = await Geolocator.requestPermission();
       if (permission != LocationPermission.whileInUse &&
           permission != LocationPermission.always) {
-        _showAlert('Location Permission Denied', 'Please grant location permission.');
+        _showAlert(
+            'Location Permission Denied', 'Please grant location permission.');
         return;
       }
     }
@@ -64,17 +66,19 @@ class _ProfilePageState extends State<ProfilePage> {
   void _showAlert(String title, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text('OK', style: TextStyle(color: Colors.green)),
+      builder: (context) =>
+          AlertDialog(
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12)),
+            title: Text(title, style: TextStyle(fontWeight: FontWeight.bold)),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK', style: TextStyle(color: Colors.green)),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -107,36 +111,39 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200], // Light background
+      backgroundColor: Colors.black, // Set background to black
       appBar: AppBar(
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.green, // Make AppBar black
         title: Text(
           'Find the nearest bike',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold), // White text
         ),
         centerTitle: true,
-        elevation: 5, // Shadow effect
+        elevation: 5,
       ),
       body: Column(
         children: [
           Padding(
             padding: EdgeInsets.all(10.0),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(15), // Rounded map corners
+              borderRadius: BorderRadius.circular(15),
               child: Container(
                 decoration: BoxDecoration(boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.white.withOpacity(0.1),
+                    // Subtle white shadow for depth
                     blurRadius: 10,
                   )
                 ]),
-                height: MediaQuery.of(context).size.height * 0.7, // 70% screen height
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.7,
                 width: double.infinity,
                 child: FlutterMap(
                   mapController: mapController,
-                  options: MapOptions(
-
-                  ),
+                  options: MapOptions(),
                   children: [
                     TileLayer(
                       urlTemplate: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -155,7 +162,8 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: AnimatedContainer(
                               duration: Duration(milliseconds: 600),
                               curve: Curves.easeInOut,
-                              child: Icon(Icons.location_on, size: 50, color: Colors.red),
+                              child: Icon(Icons.location_on, size: 50,
+                                  color: Colors.red),
                             ),
                           ),
                         ...buildBikes(),
@@ -171,8 +179,10 @@ class _ProfilePageState extends State<ProfilePage> {
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: Colors.green,
         elevation: 5,
-        label: Text("Get Location"),
-        icon: Icon(Icons.my_location),
+        label: Text("Get Location", style: TextStyle(color: Colors.white)),
+        // White text
+        icon: Icon(Icons.my_location, color: Colors.white),
+        // White icon
         onPressed: getCurrentLocation,
       ),
     );

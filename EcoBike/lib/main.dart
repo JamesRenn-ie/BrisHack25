@@ -64,26 +64,31 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: _pages[_selectedIndex],
 
-    bottomNavigationBar: BottomNavigationBar(
-
-      type: BottomNavigationBarType.fixed,
-      currentIndex: _selectedIndex,
-      onTap: _onItemTapped,
-      items: const <BottomNavigationBarItem>[
-      BottomNavigationBarItem(
-        icon: Icon(Icons.map),
-        label: 'Find A Bike',
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.green[900], // Set background color to green
+        selectedItemColor: Colors.white, // Selected item text and icon color
+        unselectedItemColor: Colors.white70,// Slightly faded white for unselected items
+        selectedLabelStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        unselectedLabelStyle: TextStyle(fontSize: 14),
+        iconSize: 30, // Make icons larger
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.map),
+            label: 'Map',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.restore_from_trash),
+            label: 'Tracker',
+          ),
+        ],
       ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.home),
-          label: 'Home',
-        ),
-        BottomNavigationBarItem(
-          icon: Icon(Icons.restore_from_trash),
-          label: 'Litter Tracker',
-        ),
-    ]
-    ),
     );
   }
 
