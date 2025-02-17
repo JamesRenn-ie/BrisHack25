@@ -159,38 +159,38 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-            BlocBuilder<BackendBloc, String>(
-              builder: (context, state) {
-                if (state.isEmpty) {
-                  return Text("Press the button to fetch data");
-                }
-                else{
-                  int currentState = jsonDecode(state)['predictions'];
-                  int stateDiff = currentState - prevState;
-                  print("TEst");
-                  // if(stateDiff != null && currentState != null) {
-                    if (stateDiff >= 0) {
-                      litterDetected += (stateDiff);
-
-                      print("Prev litter: ${prevState}");
-
-                    }
-                  prevState = currentState;
-
-                  // }
-
-                  return Text("Current litter: ${jsonDecode(state)['predictions'].toString()}\nTotal litter: ${litterDetected}");
-                    // return Text(state);
-                }
-              },
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                context.read<BackendBloc>().fetchData();
-              },
-              child: Text("Fetch Data"),
-            ),
+            // BlocBuilder<BackendBloc, String>(
+            //   builder: (context, state) {
+            //     if (state.isEmpty) {
+            //       return Text("Press the button to fetch data");
+            //     }
+            //     else{
+            //       int currentState = jsonDecode(state)['predictions'];
+            //       int stateDiff = currentState - prevState;
+            //       print("TEst");
+            //       // if(stateDiff != null && currentState != null) {
+            //         if (stateDiff >= 0) {
+            //           litterDetected += (stateDiff);
+            //
+            //           print("Prev litter: ${prevState}");
+            //
+            //         }
+            //       prevState = currentState;
+            //
+            //       // }
+            //
+            //       return Text("Current litter: ${jsonDecode(state)['predictions'].toString()}\nTotal litter: ${litterDetected}");
+            //         // return Text(state);
+            //     }
+            //   },
+            // ),
+            // const SizedBox(height: 20),
+            // ElevatedButton(
+            //   onPressed: () {
+            //     context.read<BackendBloc>().fetchData();
+            //   },
+            //   child: Text("Fetch Data"),
+            // ),
         ],
       ),
     );

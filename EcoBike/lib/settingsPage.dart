@@ -1,10 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
 import 'dart:ui' as ui;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'backend_bloc.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
@@ -67,6 +71,11 @@ class _SettingsPageState extends State<SettingsPage> {
     });
   }
 
+
+  int prevState=0;
+  int litterDetected = 0;
+
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -92,6 +101,41 @@ class _SettingsPageState extends State<SettingsPage> {
             'Minutes of free bike: ${_clickCount*5} times',
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
+          BlocBuilder<BackendBloc, String>(
+            builder: (context, state) {
+              if (state.isEmpty) {
+                return Text("Press the button to fetch data");
+              }
+              else{
+                int currentState = jsonDecode(state)['predictions'];
+                int stateDiff = currentState - prevState;
+                print("TEst");
+                // if(stateDiff != null && currentState != null) {
+                  if (stateDiff >= 0) {
+
+                    for (int i=0;i<stateDiff;i++){
+                      Future.delayed(Duration.zero, () async {
+                        increaseProgress();
+                      });
+
+                    }
+
+                    // progress += (stateDiff*0.1);
+                    // _saveProgress();
+                    //
+                    // print("Prev litter: ${prevState}");
+
+                  }
+                prevState = currentState;
+
+                // }
+
+                return Text("Current litter: ${jsonDecode(state)['predictions'].toString()}\nTotal litter: ${litterDetected}");
+                  // return Text(state);
+              }
+            },
+          ),
+
         ],
       ),
     );
