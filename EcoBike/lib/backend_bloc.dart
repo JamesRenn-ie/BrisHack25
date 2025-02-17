@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:async';
 
 class BackendBloc extends Cubit<String> {
   BackendBloc() : super('') {
@@ -15,7 +16,6 @@ class BackendBloc extends Cubit<String> {
       await fetchData();
     });
   }
-
 
   int prevState = 0;
   int litterDetected = 0;
@@ -39,5 +39,7 @@ class BackendBloc extends Cubit<String> {
     } else {
       emit('Failed to fetch data');
     }
+    // print("HEKALS");
+
   }
 }
