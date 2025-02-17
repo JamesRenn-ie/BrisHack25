@@ -19,7 +19,8 @@ def start_pipeline():
     pipeline = InferencePipeline.init(
         # model_id="litter-detection-model-re3aa/4", # Roboflow model to use
         model_id="trash-ai-v2/1",
-        video_reference="rtsp://192.168.192.110:8080/h264_ulaw.sdp", # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
+        video_reference="rtsp://192.168.225.130:8080/h264_ulaw.sdp", # Path to video, device id (int, usually 0 for built in webcams), or RTSP stream url
+        # Due to change
         on_prediction=handle_predictions, # Function to run after each prediction
     )
     pipeline.start()

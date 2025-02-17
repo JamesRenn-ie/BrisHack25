@@ -27,8 +27,6 @@ def get_data():
     if len(prev10FrameCount) >= 10:
         prev10FrameCount.pop(0)
     
-
-    
     return jsonify({'predictions': framesMode })
 
 if __name__ == '__main__':
