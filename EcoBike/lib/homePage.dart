@@ -1,7 +1,13 @@
+import 'dart:convert';
+
+import 'package:eco_bike/backend_bloc.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eco_bike/settingsPage.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
@@ -84,6 +90,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+
+  int prevState=0;
+  int litterDetected = 0;
+
   void _startBikeAnimation() {
     if (_bikePosition == -100) { // Only move if at the start
       setState(() {
@@ -98,7 +108,6 @@ class _HomePageState extends State<HomePage> {
       });
     }
   }
-
 
 
   @override
