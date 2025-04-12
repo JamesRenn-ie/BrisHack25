@@ -7,7 +7,7 @@ This project was created to compete in the BrisHack25 hackathon with the theme "
 The three sections of the app are:
 1) a webcam that can detect litter in realtime
 2) a server to process the detection and notify the app
-3) an App that works as the bike rental platform and detects your points earnt.
+3) an App that works as the bike rental platform and detect earned points.
 4) A raspberry pi mounted on the bike with and LED to display when it's "locked" or "unlocked" (this section was never properly completed due to running out of time)
    
 We used the [RoboFlow API](https://universe.roboflow.com/) with a pretrained model to do the litter detection from an RTSP webcam on the bike. A flask app was used for the backend and then a flutter frontend was developed to run as an app on a phone.
